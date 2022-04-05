@@ -6,6 +6,7 @@ local mouse = Player:GetMouse()
 mouse.TargetFilter = game.Workspace.Baseplate
 mouse.TargetFilter = game.Nodes.string.match("Node")
 
+--this function will be used in the future to send info about values into the server side lanchasters module
 function PressF(key)
 	if (key == "f") then
 		local Selected={}
