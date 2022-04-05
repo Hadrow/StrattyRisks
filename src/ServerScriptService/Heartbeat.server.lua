@@ -2,6 +2,7 @@ local RS=game:GetService('ReplicatedStorage')
 local SS=game:GetService('ServerStorage')
 local RF=RS.RemoteFunction
 
+--redundant
 function strToTable(list) --turns a string into a table
 	local out = {}
 	for entry in string.gmatch(list, "[^,]+") do
@@ -10,6 +11,7 @@ function strToTable(list) --turns a string into a table
 	return out
 end
 
+--creates a table for a client when invoked, this is not the final function
 RF.OnServerInvoke = (function(player)
 	local LocalData={}
 	for i,cur in pairs(_G.ProvinceData) do
