@@ -1,3 +1,4 @@
+--a module used to handle provinceData(province values, buildings, colors, if owned...) which is not mapData
 function ProvinceData()
 	local mapData=_G.mapData
 	local provinces=workspace.Provinces:GetChildren()

@@ -295,6 +295,7 @@ function delaunay.mapData(vertices)
 		local nvertices=#vertices
 		
 		--finds the point thats rightmost and topmost
+		--this needs work!!!!!!
 		local function cornerVertex(vertices)
 			local maxX=0
 			local minX=100
