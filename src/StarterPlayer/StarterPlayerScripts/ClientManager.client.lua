@@ -4,8 +4,11 @@ local Players=game:GetService("Players")
 local player=Players.LocalPlayer
 local mouse=player:GetMouse()
 local location=game.Workspace.Selections
-local isTrue=false
 
+local inRound=false
+local LocalData=nil
+
+--currently redundant but may come in use later, used to swap tables through attributes
 function strToTable(list)
 	local out = {}
 	for entry in string.gmatch(list, "[^,]+") do
@@ -14,9 +17,10 @@ function strToTable(list)
 	return out
 end
 
---client updater
+--sends client the relevant information
 RS:GetAttributeChangedSignal('InRound'):Connect(function()
 	if RS:GetAttribute('InRound')==true then
+		inRound=true
 		local provinces=workspace.Provinces:GetChildren()
 		for i=1,#provinces do 
 			local cur=provinces[i]
@@ -24,7 +28,7 @@ RS:GetAttributeChangedSignal('InRound'):Connect(function()
 				cur.BrickColor=BrickColor.new("Medium Medium stone grey")
 			end
 		end
-		local LocalData=RF:InvokeServer(player)
+		LocalData=RF:InvokeServer(player)
 		print(LocalData)
 		for i,cur in pairs(LocalData) do
 			print(workspace.Provinces[i])
@@ -33,6 +37,11 @@ RS:GetAttributeChangedSignal('InRound'):Connect(function()
 	end
 end)
 
+
+
+
+
+--Just a visual part of the client like the clickboxes hoverboxes etc.
 function ClickOnSelection()
 	if mouse.Target == nil then
 		return
