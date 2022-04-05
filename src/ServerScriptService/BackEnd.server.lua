@@ -129,7 +129,7 @@ local RS=game.ReplicatedStorage
 local Players=game:GetService("Players")
 local Players=game.Players
 
-
+--checks if the player count is adequate and starts the intermission screen
 Players.PlayerAdded:Connect(function(player)
 	local plrCount=#Players:GetChildren()
 	if plrCount >= 1 and RS:GetAttribute('InRound')==false then
@@ -137,6 +137,7 @@ Players.PlayerAdded:Connect(function(player)
 	end
 end)
 
+--checks if the game is in intermission and a player has left(not sure if this works) and will stop the intermission
 Players.PlayerRemoving:Connect(function(player)
 	local plrCount=#Players:GetChildren()
 	if (plrCount-1) < 2 and RS:GetAttribute('InRound')==false then
@@ -144,6 +145,7 @@ Players.PlayerRemoving:Connect(function(player)
 	end
 end)
 
+--starts generating the map at the end of intermission and start of the game
 RS:GetAttributeChangedSignal('Intermission'):Connect(function()
 	if RS:GetAttribute('Intermission')==false and RS:GetAttribute('InRound')==false and RS:GetAttribute('GameStarted')==true then
 		local plrCount=#Players:GetChildren()
@@ -152,6 +154,7 @@ RS:GetAttributeChangedSignal('Intermission'):Connect(function()
 	end
 end)
 
+--Checks if the Game ending conditions have been met and restarts the game if there are adequate amount of players.
 RS:GetAttributeChangedSignal('GameEnded'):Connect(function()
 	if RS:GetAttribute('GameEnded')==false then
 		local plrCount=#Players:GetChildren()
@@ -161,19 +164,19 @@ RS:GetAttributeChangedSignal('GameEnded'):Connect(function()
 	end
 end)
 
+--after a game has ended it clears the entire map, provinces, nodes, children and selections. Also sets the game to not in round.
 RS:GetAttributeChangedSignal('GameEnded'):Connect(function()
 	if RS:GetAttribute('GameEnded')==true then
 		RS:SetAttribute('InRound',false)
 		workspace.Nodes:ClearAllChildren()
 		workspace.Provinces:ClearAllChildren()
+		workspace.Selections:ClearAllChildren()
 	end
-	
 	wait(8)
-	RS:SetAttribute('GameEnded',false)
-	
+	RS:SetAttribute('GameEnded',false)	
 end)
 
-
+--round timer display.
 local function roundTimer()
 	while wait() do
 		while RS:GetAttribute('InRound')==false and RS:GetAttribute('Intermission')==false and RS:GetAttribute('GameEnded')==false do
