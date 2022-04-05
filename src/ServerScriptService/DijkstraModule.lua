@@ -1,3 +1,6 @@
+--local Delaunay=require(script.Parent.DelaunayModule)
+
+--copies a table
 local function copy(tabl)
 	local copy = {}
 	for k, v in pairs(tabl) do
@@ -6,6 +9,7 @@ local function copy(tabl)
 	return copy
 end
 
+--selects a vertex with the minimum path lenght
 local function selectMinVertex(set,set2)
 	local minimum=math.huge
 	local vertex=0
@@ -18,6 +22,7 @@ local function selectMinVertex(set,set2)
 	return vertex
 end
 
+--a function that calculates a shortest path from the start to the end point
 function Dijkstra(startPoint,endPoint)
 	
 	local vertices=copy(_G.mapData.Provinces)
@@ -28,18 +33,23 @@ function Dijkstra(startPoint,endPoint)
 	local processed={}
 	local parent={}
 	
+	--sets the path of all vertices to a maximum possible value
 	for i=1,#vertices do
 		distance[#distance+1]=math.huge
 		parent[#parent+1]=math.huge
 		processed[#processed+1]=false
 	end
+	
+	--makes a start point a first one in the list and also sets its distance to 0
 	parent[startPoint.id]=-1
 	distance[startPoint.id]=0
-	
+
+	--grabs adjacment vertices of a vertex
 	local function getNeighbours(vertex)
 		return matrix[vertex.id]
 	end
 	
+	--uses basic algebra to find a distance in between two vertices
 	local function findDistance(v1,v2)
 		local v1=vertices[v1]
 		local v2=vertices[v2]
@@ -51,6 +61,8 @@ function Dijkstra(startPoint,endPoint)
 		end
 		return 0
 	end
+
+	--selects the next vertex which has the minimal distance and adds it to processed table
 	for i=1,#vertices-1 do
 		
 		local U=selectMinVertex(distance,processed)
@@ -63,6 +75,8 @@ function Dijkstra(startPoint,endPoint)
 			end 
 		end
 	end
+
+	--reverses the table and finds the shortest path
 	local ShortestPath={}
 	local lastPoint=endPoint.id
 	ShortestPath[#ShortestPath+1]=lastPoint
