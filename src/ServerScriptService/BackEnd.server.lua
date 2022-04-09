@@ -51,34 +51,8 @@ function createBorder(a,b)
 	line.Black.BrickColor=BrickColor.new("Bright red")
 end
 
---Creates a Point with random(0-1)location
-function newPoint(n)
-	local x, y = math.random(), math.random()
-	return point(x*n,y*n)
-end 
-
-function genPoints(n)
-	local points = {}
-	for i = 1, 2000 do
-		points[i] = newPoint(n)
-	end
-	for i=1,#points do
-		for j=1,#points do
-			local point1=points[i]
-			local point2=points[j]
-			if point1 and point2 then
-				local mag=(toV3(point1)-toV3(point2)).Magnitude
-				if point1 and point2 and mag<3 then
-					remove(points,j)
-				end
-			end
-		end
-	end
-	return points
-end
-
-function constructMap(plrAmount)
-	print(mapData)
+function constructMap(plrCount)
+	local mapData=Delaunay.mapData
 	local edges=mapData.Edges
 	local vertices=mapData.Provinces
 	local matrix=mapData.adjMatrix
@@ -100,7 +74,7 @@ function constructMap(plrAmount)
 	local p=1
 	for i=1,#concaveHull do
 		local cur=concaveHull[i]
-		local ratio=math.floor(#concaveHull/plrAmount-0.5)
+		local ratio=math.floor(#concaveHull/plrCount-0.5)
 		if ratio*p==i then
 			provinces:FindFirstChild('Province_'..cur.id):SetAttribute("Team",Teams[p].TeamColor)
 			p=p+1
@@ -110,7 +84,7 @@ function constructMap(plrAmount)
 		end
 	end
 	
-	ProvinceData()
+	ProvinceData.generate()
 	game.ReplicatedStorage:SetAttribute('InRound',true)
 end
 
@@ -147,7 +121,7 @@ end)
 RS:GetAttributeChangedSignal('Intermission'):Connect(function()
 	if RS:GetAttribute('Intermission')==false and RS:GetAttribute('InRound')==false and RS:GetAttribute('GameStarted')==true then
 		local plrCount=#Players:GetChildren()
-		mapData(genPoints(50+10*plrCount))
+		mapData(plrCount)
 		constructMap(plrCount)
 	end
 end)

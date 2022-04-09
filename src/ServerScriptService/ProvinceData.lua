@@ -1,12 +1,19 @@
-local mapData=require(script.Parent.DelaunayModule).mapData
+local Delaunay=require(script.Parent.DelaunayModule)
+
 --a module used to handle provinceData(province values, buildings, colors, if owned...) which is not mapData
-function ProvinceData()
+
+local ProvinceData= {
+	Data  = nil
+}
+
+function ProvinceData.generate()
+	local mapData=Delaunay.mapData
 	local provinces=workspace.Provinces:GetChildren()
 	local adjMatrix=mapData.adjMatrix
-	local Province_Data={}
+	local Data={}
 	for i=1,#provinces do
-		Province_Data[provinces[i].Name]={}
-		local cur=Province_Data[provinces[i].Name]
+		Data[provinces[i].Name]={}
+		local cur=Data[provinces[i].Name]
 		cur.Artillery=provinces[i]:GetAttribute('HasArtillery')
 		cur.Factory=provinces[i]:GetAttribute('HasFactory')
 		cur.Fort=provinces[i]:GetAttribute('HasFort')
@@ -16,7 +23,8 @@ function ProvinceData()
 		cur.Value=provinces[i]:GetAttribute("Value")
 		cur.Adjacment=adjMatrix[i]
 	end
-	return Province_Data
+	ProvinceData.Data=Data
+	return Data
 end
 
 return ProvinceData

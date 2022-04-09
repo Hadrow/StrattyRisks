@@ -1,6 +1,10 @@
 local max, sqrt = math.max, math.sqrt
 local insert,remove, unpack =table.insert,table.remove, unpack or table.unpack
 
+function toV3(p)
+	return Vector3.new(p.x,0,p.y)
+end
+
 local function quatCross(a, b, c)
 	local p = (a + b + c) * (a + b - c) * (a - b + c) * (-a + b + c)
 	return sqrt( p )
@@ -169,9 +173,40 @@ local delaunay = {
 	Point            = Point,
 	Edge             = Edge,
 	Triangle         = Triangle,
+	mapData          = nil
 }
 
-function delaunay.triangulate( vertices )
+local vertices=nil
+
+function delaunay.triangulate( plrCount )
+	
+	local function newPoint(n)
+		local x, y = math.random(), math.random()
+		return Point(x*n,y*n)
+	end 
+
+	local function genPoints(n)
+		local points = {}
+		for i = 1, 2000 do
+			points[i] = newPoint(50+10*n)
+		end
+		for i=1,#points do
+			for j=1,#points do
+				local point1=points[i]
+				local point2=points[j]
+				if point1 and point2 then
+					local mag=(toV3(point1)-toV3(point2)).Magnitude
+					if point1 and point2 and mag<3 then
+						remove(points,j)
+					end
+				end
+			end
+		end
+		return points
+	end
+	
+	vertices=genPoints(plrCount)
+	
 	local nvertices = #vertices
 	assert( nvertices > 2, "Cannot triangulate, needs more than 3 vertices" )
 
@@ -243,11 +278,12 @@ function delaunay.triangulate( vertices )
 	for _ = 1,3 do 
 		remove( vertices ) 
 	end
+	
 	return triangles
 end
 
-function delaunay.mapData(vertices)
-	local triangles=delaunay.triangulate(vertices)
+function delaunay.mapData(plrCount)
+	local triangles=delaunay.triangulate(plrCount)
 	local matrix={}
 	local edges={}
 	for i=1,#triangles do
@@ -400,6 +436,8 @@ function delaunay.mapData(vertices)
 		adjMatrix=matrix,
 		Triangles=triangles
 	}
+	
+	delaunay.mapData=mapData
 
 	return mapData
 end
