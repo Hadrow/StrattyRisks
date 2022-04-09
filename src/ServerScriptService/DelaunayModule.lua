@@ -168,7 +168,7 @@ end} )
 local delaunay = {
 	Point            = Point,
 	Edge             = Edge,
-	Triangle         = Triangle
+	Triangle         = Triangle,
 }
 
 function delaunay.triangulate( vertices )
@@ -400,6 +400,7 @@ function delaunay.mapData(vertices)
 		adjMatrix=matrix,
 		Triangles=triangles
 	}
+
 	return mapData
 end
 

@@ -78,6 +78,7 @@ function genPoints(n)
 end
 
 function constructMap(plrAmount)
+	print(mapData)
 	local edges=mapData.Edges
 	local vertices=mapData.Provinces
 	local matrix=mapData.adjMatrix
