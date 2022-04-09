@@ -1,6 +1,6 @@
+local mapData=require(script.Parent.DelaunayModule).mapData
 --a module used to handle provinceData(province values, buildings, colors, if owned...) which is not mapData
 function ProvinceData()
-	local mapData=_G.mapData
 	local provinces=workspace.Provinces:GetChildren()
 	local adjMatrix=mapData.adjMatrix
 	local Province_Data={}
@@ -16,7 +16,7 @@ function ProvinceData()
 		cur.Value=provinces[i]:GetAttribute("Value")
 		cur.Adjacment=adjMatrix[i]
 	end
-	_G.ProvinceData=Province_Data
+	return Province_Data
 end
 
 return ProvinceData

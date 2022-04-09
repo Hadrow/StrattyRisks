@@ -1,7 +1,7 @@
 local Delaunay=require(script.Parent.DelaunayModule)
 local Dijkstra=require(script.Parent.DijkstraModule)
 local ProvinceData=require(script.Parent.ProvinceData)
-local triangulate=Delaunay.mapData
+local mapData=Delaunay.mapData
 local point=Delaunay.Point
 local remove=table.remove
 local testMap={point(4.83,2.06),point(3.19,7.77),point(0.99,7.06),point(0.29,2.14),point(2.15,9.41),point(8.07,4.58),point(5.73,5.51),point(9.00,6.05),point(8.23,0.92)}
@@ -51,7 +51,7 @@ function createBorder(a,b)
 	line.Black.BrickColor=BrickColor.new("Bright red")
 end
 
---Creates a Point with random location
+--Creates a Point with random(0-1)location
 function newPoint(n)
 	local x, y = math.random(), math.random()
 	return point(x*n,y*n)
@@ -78,7 +78,6 @@ function genPoints(n)
 end
 
 function constructMap(plrAmount)
-	local mapData=_G.mapData
 	local edges=mapData.Edges
 	local vertices=mapData.Provinces
 	local matrix=mapData.adjMatrix
@@ -111,8 +110,6 @@ function constructMap(plrAmount)
 	end
 	
 	ProvinceData()
-	
-	print(_G.ProvinceData)
 	game.ReplicatedStorage:SetAttribute('InRound',true)
 end
 
@@ -149,7 +146,7 @@ end)
 RS:GetAttributeChangedSignal('Intermission'):Connect(function()
 	if RS:GetAttribute('Intermission')==false and RS:GetAttribute('InRound')==false and RS:GetAttribute('GameStarted')==true then
 		local plrCount=#Players:GetChildren()
-		triangulate(genPoints(50+10*plrCount))
+		mapData(genPoints(50+10*plrCount))
 		constructMap(plrCount)
 	end
 end)

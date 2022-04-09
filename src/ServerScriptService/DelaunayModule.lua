@@ -400,7 +400,6 @@ function delaunay.mapData(vertices)
 		adjMatrix=matrix,
 		Triangles=triangles
 	}
-	_G.mapData=mapData
 	return mapData
 end
 

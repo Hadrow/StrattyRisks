@@ -1,3 +1,4 @@
+local provinceData=require(script.parent.ProvinceData)
 local RS=game:GetService('ReplicatedStorage')
 local SS=game:GetService('ServerStorage')
 local RF=RS.RemoteFunction
@@ -14,12 +15,12 @@ end
 --creates a table for a client when invoked, this is not the final function
 RF.OnServerInvoke = (function(player)
 	local LocalData={}
-	for i,cur in pairs(_G.ProvinceData) do
+	for i,cur in pairs(provinceData) do
 		if cur.Team==player.TeamColor then
 			LocalData[i]=cur
 			for j=1,#cur.Adjacment do
 				local cur2=cur.Adjacment[j]
-				LocalData["Province_"..cur2]=_G.ProvinceData["Province_"..cur2]
+				LocalData["Province_"..cur2]=provinceData["Province_"..cur2]
 			end
 		end
 	end

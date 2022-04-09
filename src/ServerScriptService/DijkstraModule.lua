@@ -1,4 +1,4 @@
---local Delaunay=require(script.Parent.DelaunayModule)
+local delaunay=require(script.Parent.DelaunayModule)
 
 --copies a table
 local function copy(tabl)
@@ -25,9 +25,9 @@ end
 --a function that calculates a shortest path from the start to the end point
 function Dijkstra(startPoint,endPoint)
 	
-	local vertices=copy(_G.mapData.Provinces)
-	local matrix=copy(_G.mapData.adjMatrix)
-	local edges=copy(_G.mapData.Edges)
+	local vertices=copy(delaunay.mapData.Provinces)
+	local matrix=copy(delaunay.mapData.adjMatrix)
+	local edges=copy(delaunay.mapData.Edges)
 	
 	local distance={}
 	local processed={}
