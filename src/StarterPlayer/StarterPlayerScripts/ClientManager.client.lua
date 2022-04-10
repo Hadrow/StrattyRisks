@@ -1,5 +1,6 @@
 local RS=game:GetService("ReplicatedStorage")
-local RF=RS.RemoteFunction
+local RF=RS.ClientDataGrabber
+local RF2=RS.ClientDataUpdate
 local Players=game:GetService("Players")
 local player=Players.LocalPlayer
 local mouse=player:GetMouse()
@@ -7,6 +8,7 @@ local location=game.Workspace.Selections
 
 local inRound=false
 local LocalData=nil
+local provinces=nil
 
 --currently redundant but may come in use later, used to swap tables through attributes
 function strToTable(list)
@@ -21,20 +23,42 @@ end
 RS:GetAttributeChangedSignal('InRound'):Connect(function()
 	if RS:GetAttribute('InRound')==true then
 		inRound=true
-		local provinces=workspace.Provinces:GetChildren()
-		for i=1,#provinces do 
-			local cur=provinces[i]
-			if cur.BrickColor~=player.TeamColor then
-				cur.BrickColor=BrickColor.new("Medium Medium stone grey")
+		provinces=workspace.Provinces:GetChildren()
+		while inRound==true do
+			for i=1,#provinces do 
+				local cur=provinces[i]
+				if cur.BrickColor~=player.TeamColor then
+					cur.BrickColor=BrickColor.new("Medium Medium stone grey")
+				end
 			end
-		end
-		LocalData=RF:InvokeServer(player)
-		print(LocalData)
-		for i,cur in pairs(LocalData) do
-			workspace.Provinces[i].BillboardGui.Enabled=true
+			LocalData=RF:InvokeServer(player)
+			for i,cur in pairs(LocalData) do
+				workspace.Provinces[i].BillboardGui.Enabled=true
+			end
+			wait()
 		end
 	end
 end)
+
+mouse.TargetFilter = workspace.Nodes
+
+--this function will be used in the future to send info about values into the server side lanchasters module
+function PressF(key)
+	if (key == "f") then
+		print('F pressed')
+		local Selections = game.Workspace.Selections:GetChildren()
+		if #Selections>0 and mouse.Target~=nil and LocalData[mouse.Target.Name]~=nil then
+			RF2:InvokeServer(mouse.Target.Name,"Owned",true)
+			RF2:InvokeServer(mouse.Target.Name,"TeamColor",player.TeamColor)
+		end
+	end
+end
+
+
+
+
+
+mouse.KeyDown:connect(PressF)
 
 
 

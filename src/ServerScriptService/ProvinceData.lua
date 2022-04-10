@@ -30,8 +30,9 @@ end
 
 function ProvinceData.update( province, attribute, update )
 	local mapData=Delaunay.mapData
+	if attribute=="TeamColor" then attribute="Team" end
 	ProvinceData.Data[province][attribute]=update
-	return print("changed",ProvinceData.Data[province][attribute],"should be", update)
+	workspace.Provinces[province]:SetAttribute(attribute,update)
 end
 
 return ProvinceData

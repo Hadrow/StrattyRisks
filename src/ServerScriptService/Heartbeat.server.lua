@@ -1,7 +1,8 @@
 local ProvinceDataModule=require(script.parent.ProvinceData)
 local RS=game:GetService('ReplicatedStorage')
 local SS=game:GetService('ServerStorage')
-local RF=RS.RemoteFunction
+local RF=RS.ClientDataGrabber
+local RF2=RS.ClientDataUpdate
 
 --redundant
 function strToTable(list) --turns a string into a table
@@ -27,4 +28,9 @@ RF.OnServerInvoke = (function(player)
 		end
 	end
 	return LocalData
+end)
+
+
+RF2.OnServerInvoke = (function(player,province,attribute,change)
+	ProvinceDataModule.update(province,attribute,change)
 end)
