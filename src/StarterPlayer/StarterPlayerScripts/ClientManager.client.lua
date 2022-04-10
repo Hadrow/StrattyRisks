@@ -34,9 +34,16 @@ RS:GetAttributeChangedSignal('InRound'):Connect(function()
 				workspace.Provinces[i]:SetAttribute("HasPowerplant",cur.Powerplant)
 				workspace.Provinces[i]:SetAttribute("Team",cur.Team)
 				workspace.Provinces[i].BrickColor=workspace.Provinces[i]:GetAttribute("Team")
-				workspace.Provinces[i]:SetAttribute("IsOwned",cur.Owned)
 				workspace.Provinces[i]:SetAttribute("Value",cur.Value)
 				workspace.Provinces[i].BillboardGui.TextLabel.Text=workspace.Provinces[i]:GetAttribute("Value")
+			end
+			for i=1,#provinces do
+				local cur=provinces[i]
+				if LocalData[cur.Name]==nil then
+					workspace.Provinces[cur.Name].BillboardGui.Enabled=false
+					workspace.Provinces[cur.Name]:SetAttribute("Team",BrickColor.new("Medium stone grey"))
+					workspace.Provinces[cur.Name].BrickColor=workspace.Provinces[cur.Name]:GetAttribute("Team")
+				end
 			end
 			wait()
 		end
@@ -51,8 +58,8 @@ function PressF(key)
 		print('F pressed')
 		local Selections = game.Workspace.Selections:GetChildren()
 		if #Selections>0 and mouse.Target~=nil and LocalData[mouse.Target.Name]~=nil then
-			RF2:InvokeServer(mouse.Target.Name,"Owned",true)
-			RF2:InvokeServer(mouse.Target.Name,"Team",player.TeamColor)
+			local province=mouse.Target.Name
+			RF2:InvokeServer(province,"Team",player.TeamColor)
 		end
 	end
 end
