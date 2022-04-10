@@ -1,6 +1,7 @@
 local RS=game:GetService("ReplicatedStorage")
 local RF=RS.ClientDataGrabber
 local RF2=RS.ClientDataUpdate
+local CombatFunction=RS.CombatFunction
 local Players=game:GetService("Players")
 local player=Players.LocalPlayer
 local mouse=player:GetMouse()
@@ -66,7 +67,7 @@ function PressF(key)
 		local Selections = game.Workspace.Selections:GetChildren()
 		if #Selections>0 and mouse.Target~=nil and LocalData[mouse.Target.Name]~=nil then
 			local province=mouse.Target.Name
-			RF2:InvokeServer(province,"Team",player.TeamColor)
+			CombatFunction:InvokeServer()
 		end
 	end
 end

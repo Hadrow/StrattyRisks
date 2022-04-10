@@ -1,12 +1,12 @@
 local Delaunay=require(script.Parent.DelaunayModule)
 local Dijkstra=require(script.Parent.DijkstraModule)
 local ProvinceData=require(script.Parent.ProvinceData)
+local Lanchasters=require(script.Parent.LanchestersModule)
 local mapData=Delaunay.mapData
 local point=Delaunay.Point
 local remove=table.remove
 local testMap={point(4.83,2.06),point(3.19,7.77),point(0.99,7.06),point(0.29,2.14),point(2.15,9.41),point(8.07,4.58),point(5.73,5.51),point(9.00,6.05),point(8.23,0.92)}
 local seed=math.random()
-
 
 local Teams=game.Teams:GetChildren()
 
