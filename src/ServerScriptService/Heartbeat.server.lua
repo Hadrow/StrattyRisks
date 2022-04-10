@@ -19,6 +19,7 @@ RF.OnServerInvoke = (function(player)
 	for i,cur in pairs(Data) do
 		if cur.Team==player.TeamColor then
 			LocalData[i]=cur
+			ProvinceDataModule.update(i,"Owned",true)
 			for j=1,#cur.Adjacment do
 				local cur2=cur.Adjacment[j]
 				LocalData["Province_"..cur2]=Data["Province_"..cur2]

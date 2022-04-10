@@ -24,7 +24,14 @@ function ProvinceData.generate()
 		cur.Adjacment=adjMatrix[i]
 	end
 	ProvinceData.Data=Data
+	print(Data)
 	return Data
+end
+
+function ProvinceData.update( province, attribute, update )
+	local mapData=Delaunay.mapData
+	ProvinceData.Data[province][attribute]=update
+	return print("changed",ProvinceData.Data[province][attribute],"should be", update)
 end
 
 return ProvinceData

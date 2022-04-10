@@ -31,7 +31,6 @@ RS:GetAttributeChangedSignal('InRound'):Connect(function()
 		LocalData=RF:InvokeServer(player)
 		print(LocalData)
 		for i,cur in pairs(LocalData) do
-			print(workspace.Provinces[i])
 			workspace.Provinces[i].BillboardGui.Enabled=true
 		end
 	end
