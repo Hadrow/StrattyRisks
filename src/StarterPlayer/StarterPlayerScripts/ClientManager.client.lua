@@ -9,6 +9,7 @@ local location=game.Workspace.Selections
 local inRound=false
 local LocalData=nil
 local provinces=nil
+mouse.TargetFilter = workspace.Nodes
 
 --currently redundant but may come in use later, used to swap tables through attributes
 function strToTable(list)
@@ -45,12 +46,18 @@ RS:GetAttributeChangedSignal('InRound'):Connect(function()
 					workspace.Provinces[cur.Name].BrickColor=workspace.Provinces[cur.Name]:GetAttribute("Team")
 				end
 			end
+			local selections=workspace.Selections:GetChildren()
+			for i=1,#selections do 
+				local cur=selections[i]
+				if workspace.Provinces[cur.Name]:GetAttribute("Team")~=player.TeamColor then
+					cur:Remove()
+				end
+			end
 			wait()
 		end
 	end
 end)
 
-mouse.TargetFilter = workspace.Nodes
 
 --this function will be used in the future to send info about values into the server side lanchasters module
 function PressF(key)
@@ -77,6 +84,7 @@ mouse.KeyDown:connect(PressF)
 --Just a visual part of the client like the clickboxes hoverboxes etc.
 function ClickOnSelection()
 	if mouse.Target == nil then
+		workspace.Selections:ClearAllChildren()
 		return
 	end
 	if mouse.Target.Parent ~= game.Workspace.Provinces then
@@ -84,9 +92,6 @@ function ClickOnSelection()
 	end
 	if mouse.Target.BrickColor ~= player.TeamColor then 
 		return
-	end
-	if mouse.Target == nil then
-		return 
 	end
 	if mouse.Target ~= nil then
 		if not location:FindFirstChild(mouse.Target.Name) then
