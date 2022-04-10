@@ -25,15 +25,18 @@ RS:GetAttributeChangedSignal('InRound'):Connect(function()
 		inRound=true
 		provinces=workspace.Provinces:GetChildren()
 		while inRound==true do
-			for i=1,#provinces do 
-				local cur=provinces[i]
-				if cur.BrickColor~=player.TeamColor then
-					cur.BrickColor=BrickColor.new("Medium Medium stone grey")
-				end
-			end
 			LocalData=RF:InvokeServer(player)
 			for i,cur in pairs(LocalData) do
 				workspace.Provinces[i].BillboardGui.Enabled=true
+				workspace.Provinces[i]:SetAttribute("HasArtilley",cur.Artillery)
+				workspace.Provinces[i]:SetAttribute("HasFactory",cur.Factory)
+				workspace.Provinces[i]:SetAttribute("HasFort",cur.Fort)
+				workspace.Provinces[i]:SetAttribute("HasPowerplant",cur.Powerplant)
+				workspace.Provinces[i]:SetAttribute("Team",cur.Team)
+				workspace.Provinces[i].BrickColor=workspace.Provinces[i]:GetAttribute("Team")
+				workspace.Provinces[i]:SetAttribute("IsOwned",cur.Owned)
+				workspace.Provinces[i]:SetAttribute("Value",cur.Value)
+				workspace.Provinces[i].BillboardGui.TextLabel.Text=workspace.Provinces[i]:GetAttribute("Value")
 			end
 			wait()
 		end
@@ -49,7 +52,7 @@ function PressF(key)
 		local Selections = game.Workspace.Selections:GetChildren()
 		if #Selections>0 and mouse.Target~=nil and LocalData[mouse.Target.Name]~=nil then
 			RF2:InvokeServer(mouse.Target.Name,"Owned",true)
-			RF2:InvokeServer(mouse.Target.Name,"TeamColor",player.TeamColor)
+			RF2:InvokeServer(mouse.Target.Name,"Team",player.TeamColor)
 		end
 	end
 end

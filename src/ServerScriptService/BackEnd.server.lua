@@ -71,12 +71,15 @@ function constructMap(plrCount)
 
 	local provinces = workspace.Provinces
 	
+	ProvinceData.generate()
+
 	local p=1
 	for i=1,#concaveHull do
 		local cur=concaveHull[i]
 		local ratio=math.floor(#concaveHull/plrCount-0.5)
 		if ratio*p==i then
-			provinces:FindFirstChild('Province_'..cur.id):SetAttribute("Team",Teams[p].TeamColor)
+			local province="Province_"..cur.id
+			ProvinceData.update(province,"Team",Teams[p].TeamColor)
 			p=p+1
 		end
 		if concaveHull[i+1]~=nil then
@@ -84,7 +87,6 @@ function constructMap(plrCount)
 		end
 	end
 	
-	ProvinceData.generate()
 	game.ReplicatedStorage:SetAttribute('InRound',true)
 end
 
