@@ -180,15 +180,16 @@ local vertices=nil
 
 function delaunay.triangulate( plrCount )
 	
-	local function newPoint(n)
+	local function newPoint()
+		local n=50+10*plrCount
 		local x, y = math.random(), math.random()
 		return Point(x*n,y*n)
 	end 
 
-	local function genPoints(n)
+	local function genPoints()
 		local points = {}
 		for i = 1, 2000 do
-			points[i] = newPoint(50+10*n)
+			points[i] = newPoint()
 		end
 		for i=1,#points do
 			for j=1,#points do
@@ -205,7 +206,7 @@ function delaunay.triangulate( plrCount )
 		return points
 	end
 	
-	vertices=genPoints(plrCount)
+	vertices=genPoints()
 	
 	local nvertices = #vertices
 	assert( nvertices > 2, "Cannot triangulate, needs more than 3 vertices" )
