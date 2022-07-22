@@ -41,8 +41,8 @@ function Dijkstra(startPoint,endPoint)
 	end
 	
 	--makes a start point a first one in the list and also sets its distance to 0
-	parent[startPoint.id]=-1
-	distance[startPoint.id]=0
+	parent[startPoint]=-1
+	distance[startPoint]=0
 
 	--grabs adjacment vertices of a vertex
 	local function getNeighbours(vertex)
@@ -78,7 +78,7 @@ function Dijkstra(startPoint,endPoint)
 
 	--reverses the table and finds the shortest path
 	local ShortestPath={}
-	local lastPoint=endPoint.id
+	local lastPoint=endPoint
 	ShortestPath[#ShortestPath+1]=lastPoint
 	for i=1,#vertices do
 		local lastPoint=ShortestPath[#ShortestPath]

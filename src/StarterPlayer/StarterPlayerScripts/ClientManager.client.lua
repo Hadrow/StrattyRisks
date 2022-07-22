@@ -2,6 +2,7 @@ local RS=game:GetService("ReplicatedStorage")
 local RF=RS.ClientDataGrabber
 local RF2=RS.ClientDataUpdate
 local CombatFunction=RS.CombatFunction
+local DijkstraFunction=RS.DijkstraFunction
 local Players=game:GetService("Players")
 local player=Players.LocalPlayer
 local mouse=player:GetMouse()
@@ -66,12 +67,28 @@ function PressF(key)
 		print('F pressed')
 		local Selections = game.Workspace.Selections:GetChildren()
 		if #Selections>0 and mouse.Target~=nil and LocalData[mouse.Target.Name]~=nil then
-			local province=mouse.Target.Name
-			CombatFunction:InvokeServer()
-			print("works!")
+			local Province1=LocalData[Selections[1].Name]
+			local Province2=LocalData[mouse.Target.Name]
+			print(DijkstraFunction:InvokeServer(Province1,Province2))
 		end
 	end
 end
+
+
+--combat(gonna be used in the future)
+--[[
+function CombatStarts()
+	if (Troop.position==Province2.position) then
+		local Selections = game.Workspace.Selections:GetChildren()
+		if #Selections>0 and mouse.Target~=nil and LocalData[mouse.Target.Name]~=nil then
+			local Province1=LocalData[Selections[1].Name]
+			local Province2=LocalData[mouse.Target.Name]
+			print(Province1,Province2)
+			print(CombatFunction:InvokeServer(Province1,Province2))
+		end
+	end
+end
+]]
 
 
 

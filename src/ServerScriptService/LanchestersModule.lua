@@ -3,8 +3,8 @@
 function Lanchesters(Province1,Province2)
 	local AttackerTroops, DefenderTroops=Province1.Value,Province2.Value
 	local AttackerArtillery=1
-	local DefenderFort=1
-	
+	local DefenderFort=1	
+	print("works!")
 	if Province1.HasArtillery==true then AttackerArtillery=2 end
 	if Province2.HasFort==true then DefenderFort=2 end
 	
@@ -18,7 +18,7 @@ function Lanchesters(Province1,Province2)
 		AttackerTroops=AttackerTroops-ForceDefender
 		DefenderTroops=DefenderTroops-ForceAttacker
 		
-		if DefenderTroops<0 then DefenderTroops=0 end
+		if DefenderTroops<0 then DefenderTroops=0 elseif AttackerTroops<0 then AttackerTroops=0 end
 		print(AttackerTroops,DefenderTroops)
 		wait(0.1)
     end

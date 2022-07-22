@@ -1,8 +1,12 @@
 local ProvinceDataModule=require(script.parent.ProvinceData)
+local LanchestersModule=require(script.parent.LanchestersModule)
+local DijkstraModule=require(script.parent.DijkstraModule)
 local RS=game:GetService('ReplicatedStorage')
 local SS=game:GetService('ServerStorage')
 local RF=RS.ClientDataGrabber
 local RF2=RS.ClientDataUpdate
+local RF3=RS.CombatFunction
+local RF4=RS.DijkstraFunction
 
 --redundant
 function strToTable(list) --turns a string into a table
@@ -12,6 +16,12 @@ function strToTable(list) --turns a string into a table
 	end
 	return out
 end
+
+
+RF3.OnServerInvoke = (function(player,p1,p2)
+	return LanchestersModule(p1,p2)
+end)
+
 
 --creates a table for a client when invoked, this is not the final function
 RF.OnServerInvoke = (function(player)
@@ -33,4 +43,9 @@ end)
 
 RF2.OnServerInvoke = (function(player,province,attribute,change)
 	ProvinceDataModule.update(province,attribute,change)
+end)
+
+RF4.OnServerInvoke = (function(player,province1,province2)
+	print(DijkstraModule(province1,province2))
+	return DijkstraModule(province1,province2)
 end)
