@@ -46,6 +46,5 @@ RF2.OnServerInvoke = (function(player,province,attribute,change)
 end)
 
 RF4.OnServerInvoke = (function(player,province1,province2)
-	print(DijkstraModule(province1,province2))
 	return DijkstraModule(province1,province2)
 end)

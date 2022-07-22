@@ -67,8 +67,9 @@ function PressF(key)
 		print('F pressed')
 		local Selections = game.Workspace.Selections:GetChildren()
 		if #Selections>0 and mouse.Target~=nil and LocalData[mouse.Target.Name]~=nil then
-			local Province1=LocalData[Selections[1].Name]
-			local Province2=LocalData[mouse.Target.Name]
+			local Province1=[Selections[1].Name = LocalData[Selections[1].Name]]
+			local Province2=[mouse.Target.Name = LocalData[mouse.Target.Name]]
+			print(Province1,Province2)
 			print(DijkstraFunction:InvokeServer(Province1,Province2))
 		end
 	end

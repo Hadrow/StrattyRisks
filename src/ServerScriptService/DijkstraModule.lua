@@ -86,6 +86,6 @@ function Dijkstra(startPoint,endPoint)
 		if nextis==-1 then break end
 		ShortestPath[#ShortestPath+1]=nextis
 	end
-	print(ShortestPath)
+	return ShortestPath
 end
 return Dijkstra
