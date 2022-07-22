@@ -68,6 +68,7 @@ function PressF(key)
 		if #Selections>0 and mouse.Target~=nil and LocalData[mouse.Target.Name]~=nil then
 			local province=mouse.Target.Name
 			CombatFunction:InvokeServer()
+			print("works!")
 		end
 	end
 end
@@ -77,11 +78,6 @@ end
 
 
 mouse.KeyDown:connect(PressF)
-
-
-
-
-
 --Just a visual part of the client like the clickboxes hoverboxes etc.
 function ClickOnSelection()
 	if mouse.Target == nil then
