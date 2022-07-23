@@ -7,6 +7,7 @@ local Players=game:GetService("Players")
 local player=Players.LocalPlayer
 local mouse=player:GetMouse()
 local location=game.Workspace.Selections
+local GUI=100
 
 local inRound=false
 local LocalData=nil
@@ -20,6 +21,19 @@ function strToTable(list)
 		table.insert(out, tonumber(entry))
 	end
 	return out
+end
+
+function tableToStr(table)
+	print(table)
+	local string='['
+	for i=1,#table do
+		local cur=table[i]
+		print(cur)
+		string[i+1]=tostring(cur)
+		string[i+1]=','
+	end
+	string[i+1]=']'
+	return string
 end
 
 --sends client the relevant information
@@ -63,16 +77,39 @@ end)
 
 --this function will be used in the future to send info about values into the server side lanchasters module
 function PressF(key)
+	local target=mouse.Target
 	if (key == "f") then
-		print('F pressed')
 		local Selections = game.Workspace.Selections:GetChildren()
-		if #Selections>0 and mouse.Target~=nil and LocalData[mouse.Target.Name]~=nil then
+		if #Selections>0 and target~=nil and LocalData[target.Name]~=nil then
 			local Province1={[Selections[1].Name] = LocalData[Selections[1].Name]}
-			local Province2={[mouse.Target.Name] = LocalData[mouse.Target.Name]}
-			print(Province1,Province2)
-			print(DijkstraFunction:InvokeServer(Province1,Province2))
+			local Province2={[target.Name] = LocalData[target.Name]}
+			local path = DijkstraFunction:InvokeServer(Province1,Province2)
+			for i=1,#Selections do
+				local units=countUnits(Selections[i].Name)
+				local cur ={[Selections[i].Name] = LocalData[Selections[i].Name]}
+				local path = tableToStr(DijkstraFunction:InvokeServer(cur,Province2))
+				print(path)
+				generateBlob(units,workspace.Provinces[Selections[i].Name].position,target.Name,Path)
+			end
 		end
 	end
+end
+
+function generateBlob(units,position,HeadingFor,Path)
+	local Blob = RS.Blob:Clone()
+	Blob.Parent = workspace.Blobs
+	Blob.BrickColor = BrickColor.new(player.TeamColor.Color)
+	Blob.Size=Vector3.new(0.6*(1+units/1000),(1+units/1000),(1+units/1000))
+	Blob.Position=position
+	Blob:SetAttribute("HeadingFor",HeadingFor)
+	Blob:SetAttribute("Path",Path)
+end
+
+function countUnits(province)
+	local num=RF:InvokeServer(province,'Value')
+	print(num)
+	if num>GUI then num=GUI end
+	return num
 end
 
 

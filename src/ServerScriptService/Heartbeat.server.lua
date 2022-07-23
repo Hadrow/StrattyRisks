@@ -24,20 +24,24 @@ end)
 
 
 --creates a table for a client when invoked, this is not the final function
-RF.OnServerInvoke = (function(player)
+RF.OnServerInvoke = (function(player,provinceName,index)
 	local Data=ProvinceDataModule.Data
 	local LocalData={}
-	for i,cur in pairs(Data) do
-		if cur.Team==player.TeamColor then
-			LocalData[i]=cur
-			ProvinceDataModule.update(i,"Owned",true)
-			for j=1,#cur.Adjacment do
-				local cur2=cur.Adjacment[j]
-				LocalData["Province_"..cur2]=Data["Province_"..cur2]
+	if index==nil then
+		for i,cur in pairs(Data) do
+			if cur.Team==player.TeamColor then
+				LocalData[i]=cur
+				ProvinceDataModule.update(i,"Owned",true)
+				for j=1,#cur.Adjacment do
+					local cur2=cur.Adjacment[j]
+					LocalData["Province_"..cur2]=Data["Province_"..cur2]
+				end
 			end
 		end
+		return LocalData
 	end
-	return LocalData
+	print(provinceName,index)
+	return Data[provinceName][index]
 end)
 
 
