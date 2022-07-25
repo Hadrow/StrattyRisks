@@ -71,12 +71,13 @@ function PressF(key)
 		if #Selections>0 and target~=nil and LocalData[target.Name]~=nil then
 			local Province1={[Selections[1].Name] = LocalData[Selections[1].Name]}
 			local Province2={[target.Name] = LocalData[target.Name]}
-			local path = DijkstraFunction:InvokeServer(Province1,Province2)
 			for i=1,#Selections do
 				local units=countUnits(Selections[i].Name)
 				local cur ={[Selections[i].Name] = LocalData[Selections[i].Name]}
 				local path = tableToStr(DijkstraFunction:InvokeServer(cur,Province2))
 				BlobCloner:FireServer(units,workspace.Provinces[Selections[i].Name].position,path)
+				local OwnerUnits=SpecificDataGrabber:InvokeServer(Selections[i].Name,'OwnerValue')
+				ClientDataUpdate:InvokeServer(Selections[i].Name,'OwnerValue',(OwnerUnits-units))
 			end
 		end
 	end

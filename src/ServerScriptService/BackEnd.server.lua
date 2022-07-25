@@ -107,7 +107,7 @@ local Players=game.Players
 --checks if the player count is adequate and starts the intermission screen
 Players.PlayerAdded:Connect(function(player)
 	local plrCount=#Players:GetChildren()
-	if plrCount >= 1 and RS:GetAttribute('InRound')==false then
+	if plrCount >= 2 and RS:GetAttribute('InRound')==false then
 		RS:SetAttribute('Intermission',true)
 	end
 end)

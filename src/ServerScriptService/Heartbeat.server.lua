@@ -13,6 +13,7 @@ local function onEventFired(player,units,position,Path)
 	Blob.Size=Vector3.new(0.6*(1+units/1000),(1+units/1000),(1+units/1000))
 	Blob.Position=position
 	Blob:SetAttribute('Path',Path)
+	Blob:SetAttribute('Atk',units)
 end
 BlobCloner.OnServerEvent:Connect(onEventFired)
 
@@ -37,7 +38,7 @@ end)
 --updates data on the client when there is an observed change
 local ClientDataUpdate=ReplicatedStorage.ClientDataUpdate
 ClientDataUpdate.OnServerInvoke = (function(player,province,attribute,change)
-	ProvinceDataModule.update(player.TeamColor,province,attribute,change)
+	ProvinceDataModule.update(province,attribute,change)
 end)
 
 --communicates path to the client who uses the function
@@ -45,3 +46,9 @@ local DijkstraFunction=ReplicatedStorage.DijkstraFunction
 DijkstraFunction.OnServerInvoke = (function(player,province1,province2)
 	return DijkstraModule(province1,province2)
 end)
+
+local CombatFunction=ReplicatedStorage.CombatFunction
+CombatFunction.OnClientInvoke=(function(province2,attacker)
+	ProvinceDataModule.Data[province2]['AttackerValue']=attacker
+	Lanchesters(ProvinceDataModule.Data[province2]['OwnerValue'],ProvinceDataModule.Data[province2]['DefenderValue'])
+)

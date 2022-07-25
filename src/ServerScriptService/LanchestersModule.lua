@@ -1,7 +1,6 @@
 --work in progress
 
 function Lanchesters(Province1,Province2)
-	local AttackerTroops, DefenderTroops=Province1.Value,Province2.Value
 	local AttackerArtillery=1
 	local DefenderFort=1	
 	print("works!")
