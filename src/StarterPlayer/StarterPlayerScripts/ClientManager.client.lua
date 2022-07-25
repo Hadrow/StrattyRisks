@@ -8,6 +8,7 @@ local player=Players.LocalPlayer
 local mouse=player:GetMouse()
 local location=game.Workspace.Selections
 local GUI=100
+local CloneEvent=RS.BlobCloner
 
 local inRound=false
 local LocalData=nil
@@ -24,15 +25,12 @@ function strToTable(list)
 end
 
 function tableToStr(table)
-	print(table)
-	local string='['
-	for i=1,#table do
-		local cur=table[i]
-		print(cur)
-		string[i+1]=tostring(cur)
-		string[i+1]=','
+	local string=''
+	for i,v in pairs(table) do
+		local name,value=next(v)
+		string=string..name..','
 	end
-	string[i+1]=']'
+	string=string:sub(0,-2)
 	return string
 end
 
@@ -88,26 +86,14 @@ function PressF(key)
 				local units=countUnits(Selections[i].Name)
 				local cur ={[Selections[i].Name] = LocalData[Selections[i].Name]}
 				local path = tableToStr(DijkstraFunction:InvokeServer(cur,Province2))
-				print(path)
-				generateBlob(units,workspace.Provinces[Selections[i].Name].position,target.Name,Path)
+				CloneEvent:FireServer(units,workspace.Provinces[Selections[i].Name].position,path)
 			end
 		end
 	end
 end
 
-function generateBlob(units,position,HeadingFor,Path)
-	local Blob = RS.Blob:Clone()
-	Blob.Parent = workspace.Blobs
-	Blob.BrickColor = BrickColor.new(player.TeamColor.Color)
-	Blob.Size=Vector3.new(0.6*(1+units/1000),(1+units/1000),(1+units/1000))
-	Blob.Position=position
-	Blob:SetAttribute("HeadingFor",HeadingFor)
-	Blob:SetAttribute("Path",Path)
-end
-
 function countUnits(province)
 	local num=RF:InvokeServer(province,'Value')
-	print(num)
 	if num>GUI then num=GUI end
 	return num
 end

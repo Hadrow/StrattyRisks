@@ -98,7 +98,7 @@ end
 --#########################################################################################
 
 local roundLength  =0
-local IntermissionLength = 3
+local IntermissionLength = 1
 local RS=game.ReplicatedStorage
 local Players=game:GetService("Players")
 local Players=game.Players

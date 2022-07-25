@@ -1,6 +1,6 @@
 local Delaunay=require(script.Parent.DelaunayModule)
 
---a module used to handle provinceData(province values, buildings, colors, if owned...) which is not mapData
+--a module used to handle provinceData(province values, buildings, colors, if owned...)
 
 local ProvinceData= {
 	Data  = nil
@@ -29,7 +29,6 @@ function ProvinceData.generate()
 end
 
 function ProvinceData.update(province, attribute, update )
-	local mapData=Delaunay.mapData
 	ProvinceData.Data[province][attribute]=update
 end
 
