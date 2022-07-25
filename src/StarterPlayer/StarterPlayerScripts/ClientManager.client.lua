@@ -1,11 +1,15 @@
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
-local ClientDataGrabber=ReplicatedStorage.ClientDataGrabber
+local TeamDataGrabber=ReplicatedStorage.TeamDataGrabber
+local SpecificDataGrabber=ReplicatedStorage.SpecificDataGrabber
 local ClientDataUpdate=ReplicatedStorage.ClientDataUpdate
+
 local CombatFunction=ReplicatedStorage.CombatFunction
 local DijkstraFunction=ReplicatedStorage.DijkstraFunction
+
 local Players=game:GetService("Players")
 local player=Players.LocalPlayer
 local mouse=player:GetMouse()
+
 local location=game.Workspace.Selections
 local GUI=100
 local BlobCloner=ReplicatedStorage.BlobCloner
@@ -15,7 +19,6 @@ local LocalData=nil
 local provinces=nil
 mouse.TargetFilter = workspace.Nodes
 
---currently redundant but may come in use later, used to swap tables through attributes
 function strToTable(list)
 	local out = {}
 	for entry in string.gmatch(list, "[^,]+") do
@@ -40,36 +43,22 @@ ReplicatedStorage:GetAttributeChangedSignal('InRound'):Connect(function()
 		inRound=true
 		provinces=workspace.Provinces:GetChildren()
 		while inRound==true do
-			LocalData=ClientDataGrabber:InvokeServer(player)
-			print(LocalData)
-			for i,cur in pairs(LocalData) do
+			LocalData=TeamDataGrabber:InvokeServer()
+			for i,v in pairs(workspace.Provinces:GetChildren()) do
+				if LocalData[v.Name]==nil then
+					v.BrickColor=BrickColor.new('Middile stone grey')
+					v.BillboardGui.Enabled=false
+				end
+			end
+			for i,v in pairs(LocalData) do
+				workspace.Provinces[i].BrickColor=v.Team
 				workspace.Provinces[i].BillboardGui.Enabled=true
-				workspace.Provinces[i]:SetAttribute("HasArtilley",cur.Artillery)
-				workspace.Provinces[i]:SetAttribute("HasFactory",cur.Factory)
-				workspace.Provinces[i]:SetAttribute("HasFort",cur.Fort)
-				workspace.Provinces[i]:SetAttribute("HasPowerplant",cur.Powerplant)
-				workspace.Provinces[i]:SetAttribute("Team",cur.Team)
-				workspace.Provinces[i].BrickColor=workspace.Provinces[i]:GetAttribute("Team")
-				workspace.Provinces[i]:SetAttribute("Value",cur.Value)
-				workspace.Provinces[i].BillboardGui.TextLabel.Text=workspace.Provinces[i]:GetAttribute("Value")
-			end
-			for i=1,#provinces do
-				local cur=provinces[i]
-				if LocalData[cur.Name]==nil then
-					workspace.Provinces[cur.Name].BillboardGui.Enabled=false
-					workspace.Provinces[cur.Name]:SetAttribute("Team",BrickColor.new("Medium stone grey"))
-					workspace.Provinces[cur.Name].BrickColor=workspace.Provinces[cur.Name]:GetAttribute("Team")
-				end
-			end
-			local selections=workspace.Selections:GetChildren()
-			for i=1,#selections do 
-				local cur=selections[i]
-				if workspace.Provinces[cur.Name]:GetAttribute("Team")~=player.TeamColor then
-					cur:Remove()
-				end
+				workspace.Provinces[i].BillboardGui.OwnerValue.Text=SpecificDataGrabber:InvokeServer(i,'OwnerValue')
 			end
 			wait()
 		end
+	else
+		inRound=false
 	end
 end)
 
@@ -94,7 +83,7 @@ function PressF(key)
 end
 
 function countUnits(province)
-	local num=ClientDataGrabber:InvokeServer(province,'Value')
+	local num=SpecificDataGrabber:InvokeServer(province,'OwnerValue')
 	if num>GUI then num=GUI end
 	return num
 end

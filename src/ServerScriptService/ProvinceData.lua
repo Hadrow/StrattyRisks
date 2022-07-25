@@ -14,42 +14,46 @@ function ProvinceData.generate()
 	for i=1,#provinces do
 		Data[provinces[i].Name]={}
 		local cur=Data[provinces[i].Name]
-		cur.Artillery=provinces[i]:GetAttribute('HasArtillery')
-		cur.Factory=provinces[i]:GetAttribute('HasFactory')
-		cur.Fort=provinces[i]:GetAttribute('HasFort')
-		cur.Powerplant=provinces[i]:GetAttribute('HasPowerplant')
-		cur.Team=provinces[i]:GetAttribute("Team")
-		cur.Owned=provinces[i]:GetAttribute("IsOwned")
-		cur.Value=provinces[i]:GetAttribute("Value")
-		cur.Adjacment=adjMatrix[i]
+		cur.Artillery=false
+		cur.Factory=false
+		cur.Fort=false
+		cur.Powerplant=false
+		cur.Team=BrickColor.new("Middile stone grey")
+		cur.OwnerValue=100
+		cur.AttackerValue=0
+		cur.AdjacmentTo=adjMatrix[i]
 	end
 	ProvinceData.Data=Data
 	print(Data)
 	return Data
 end
 
-function ProvinceData.update(province, attribute, update )
-	ProvinceData.Data[province][attribute]=update
+--gets updates from the clients
+function ProvinceData.update(province, data, update )
+	ProvinceData.Data[province][data]=update
 end
 
-function ProvinceData.grab(TeamColor, province, attribute, data)
-	local Data=ProvinceData.Data
-	local LocalData={}
-	if data==nil then
-		for i,cur in pairs(Data) do
-			if cur.Team==TeamColor then
-				LocalData[i]=cur
-				ProvinceData.update(i,"Owned",true)
-				for j=1,#cur.Adjacment do
-					local cur2=cur.Adjacment[j]
-					LocalData["Province_"..cur2]=Data["Province_"..cur2]
+--only gives specific data
+function ProvinceData.SpecificRequest(province,data)
+	return ProvinceData.Data[province][data]
+end
+
+--gives whole data, usually only at the game start
+function ProvinceData.request(TeamColor)
+	local list={}
+	local ProvinceData=ProvinceData.Data
+	for i,v in pairs(ProvinceData) do
+		if v.Team==TeamColor then
+			list[i]=v
+			local Adjacment=v['AdjacmentTo']
+			for j,w in pairs(Adjacment) do
+				if list['Province_'..w]==nil then
+					list['Province_'..w]=ProvinceData['Province_'..w]
 				end
 			end
 		end
-		print(LocalData)
-		return LocalData
 	end
-	return Data[attribute][data]
+	return list
 end
 
 return ProvinceData

@@ -4,6 +4,7 @@ local DijkstraModule=require(script.parent.DijkstraModule)
 local ReplicatedStorage=game:GetService('ReplicatedStorage')
 local ServerStorage=game:GetService('ServerStorage')
 
+--clones a bob on request from a client
 local BlobCloner=ReplicatedStorage.BlobCloner
 local function onEventFired(player,units,position,Path)
 	local Blob = ReplicatedStorage.Blob:Clone()
@@ -13,36 +14,33 @@ local function onEventFired(player,units,position,Path)
 	Blob.Position=position
 	Blob:SetAttribute('Path',Path)
 end
-
 BlobCloner.OnServerEvent:Connect(onEventFired)
 
---redundant
-function strToTable(list) --turns a string into a table
-	local out = {}
-	for entry in string.gmatch(list, "[^,]+") do
-		table.insert(out, tonumber(entry))
-	end
-	return out
-end
-
+--updates combat to the request
 local CombatFunction=ReplicatedStorage.CombatFunction
 CombatFunction.OnServerInvoke = (function(player,p1,p2)
 	return LanchestersModule(p1,p2)
 end)
 
-
---creates a table for a client when invoked, this is not the final function
-
-local ClientDataGrabber=ReplicatedStorage.ClientDataGrabber
-ClientDataGrabber.OnServerInvoke = (function(player,provinceName,data)
-	return ProvinceDataModule.grab(province,attribute,data)
+--client/server request for specific information
+local SpecificDataGrabber=ReplicatedStorage.SpecificDataGrabber
+SpecificDataGrabber.OnServerInvoke = (function(player,province,data)
+	return ProvinceDataModule.SpecificRequest(province,data)
 end)
 
+--creates a table for everything a client owns, usually only at the start of the game
+local TeamDataGrabber=ReplicatedStorage.TeamDataGrabber
+TeamDataGrabber.OnServerInvoke=(function(player)
+	return ProvinceDataModule.request(player.TeamColor)
+end)
+
+--updates data on the client when there is an observed change
 local ClientDataUpdate=ReplicatedStorage.ClientDataUpdate
 ClientDataUpdate.OnServerInvoke = (function(player,province,attribute,change)
 	ProvinceDataModule.update(player.TeamColor,province,attribute,change)
 end)
 
+--communicates path to the client who uses the function
 local DijkstraFunction=ReplicatedStorage.DijkstraFunction
 DijkstraFunction.OnServerInvoke = (function(player,province1,province2)
 	return DijkstraModule(province1,province2)

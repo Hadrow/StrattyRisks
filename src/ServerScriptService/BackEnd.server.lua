@@ -80,6 +80,7 @@ function constructMap(plrCount)
 		if ratio*p==i then
 			local province="Province_"..cur.id
 			ProvinceData.update(province,"Team",Teams[p].TeamColor)
+			ProvinceData.update(province,"OwnerValue",1000)
 			p=p+1
 		end
 		if concaveHull[i+1]~=nil then
@@ -145,6 +146,7 @@ RS:GetAttributeChangedSignal('GameEnded'):Connect(function()
 		workspace.Nodes:ClearAllChildren()
 		workspace.Provinces:ClearAllChildren()
 		workspace.Selections:ClearAllChildren()
+		workspace.Blobs:ClearAllChildren()
 	end
 	wait(8)
 	RS:SetAttribute('GameEnded',false)	
