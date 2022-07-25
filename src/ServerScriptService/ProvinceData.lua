@@ -32,4 +32,24 @@ function ProvinceData.update(province, attribute, update )
 	ProvinceData.Data[province][attribute]=update
 end
 
+function ProvinceData.grab(TeamColor, province, attribute, data)
+	local Data=ProvinceData.Data
+	local LocalData={}
+	if data==nil then
+		for i,cur in pairs(Data) do
+			if cur.Team==TeamColor then
+				LocalData[i]=cur
+				ProvinceData.update(i,"Owned",true)
+				for j=1,#cur.Adjacment do
+					local cur2=cur.Adjacment[j]
+					LocalData["Province_"..cur2]=Data["Province_"..cur2]
+				end
+			end
+		end
+		print(LocalData)
+		return LocalData
+	end
+	return Data[attribute][data]
+end
+
 return ProvinceData

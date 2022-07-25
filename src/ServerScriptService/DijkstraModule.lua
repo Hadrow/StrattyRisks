@@ -86,7 +86,6 @@ function Dijkstra(startPoint,endPoint)
 		if nextis==-1 then break end
 		ShortestPath[#ShortestPath+1]=nextis
 	end
-	ShortestPath[#ShortestPath+1]=startPoint
 	for i=1, math.floor(#ShortestPath/2) do
 		local j=#ShortestPath-i+1
 		ShortestPath[i],ShortestPath[j]=ShortestPath[j],ShortestPath[i]

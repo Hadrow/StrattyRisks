@@ -1,14 +1,14 @@
-local RS=game:GetService("ReplicatedStorage")
-local RF=RS.ClientDataGrabber
-local RF2=RS.ClientDataUpdate
-local CombatFunction=RS.CombatFunction
-local DijkstraFunction=RS.DijkstraFunction
+local ReplicatedStorage=game:GetService("ReplicatedStorage")
+local ClientDataGrabber=ReplicatedStorage.ClientDataGrabber
+local ClientDataUpdate=ReplicatedStorage.ClientDataUpdate
+local CombatFunction=ReplicatedStorage.CombatFunction
+local DijkstraFunction=ReplicatedStorage.DijkstraFunction
 local Players=game:GetService("Players")
 local player=Players.LocalPlayer
 local mouse=player:GetMouse()
 local location=game.Workspace.Selections
 local GUI=100
-local CloneEvent=RS.BlobCloner
+local BlobCloner=ReplicatedStorage.BlobCloner
 
 local inRound=false
 local LocalData=nil
@@ -35,12 +35,13 @@ function tableToStr(table)
 end
 
 --sends client the relevant information
-RS:GetAttributeChangedSignal('InRound'):Connect(function()
-	if RS:GetAttribute('InRound')==true then
+ReplicatedStorage:GetAttributeChangedSignal('InRound'):Connect(function()
+	if ReplicatedStorage:GetAttribute('InRound')==true then
 		inRound=true
 		provinces=workspace.Provinces:GetChildren()
 		while inRound==true do
-			LocalData=RF:InvokeServer(player)
+			LocalData=ClientDataGrabber:InvokeServer(player)
+			print(LocalData)
 			for i,cur in pairs(LocalData) do
 				workspace.Provinces[i].BillboardGui.Enabled=true
 				workspace.Provinces[i]:SetAttribute("HasArtilley",cur.Artillery)
@@ -86,14 +87,14 @@ function PressF(key)
 				local units=countUnits(Selections[i].Name)
 				local cur ={[Selections[i].Name] = LocalData[Selections[i].Name]}
 				local path = tableToStr(DijkstraFunction:InvokeServer(cur,Province2))
-				CloneEvent:FireServer(units,workspace.Provinces[Selections[i].Name].position,path)
+				BlobCloner:FireServer(units,workspace.Provinces[Selections[i].Name].position,path)
 			end
 		end
 	end
 end
 
 function countUnits(province)
-	local num=RF:InvokeServer(province,'Value')
+	local num=ClientDataGrabber:InvokeServer(province,'Value')
 	if num>GUI then num=GUI end
 	return num
 end
